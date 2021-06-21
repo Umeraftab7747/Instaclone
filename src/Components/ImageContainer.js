@@ -1,3 +1,4 @@
+/* eslint-disable react/self-closing-comp */
 import React from 'react';
 import {
   StyleSheet,
@@ -6,26 +7,59 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import {w, h} from 'react-native-responsiveness';
 
 export function ImageContainer({img, name}) {
+  const [modalVisible, setModalVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setModalVisible(false);
+    }, 4000);
+  }, [modalVisible]);
+
   return (
-    <TouchableOpacity style={styles.megacontainer}>
-      <ImageBackground source={require('../assets/c.png')} style={styles.img}>
-        <View style={styles.container}>
+    <>
+      <TouchableOpacity
+        onPress={() => {
+          setModalVisible(true);
+        }}
+        style={styles.megacontainer}>
+        <ImageBackground source={require('../assets/c.png')} style={styles.img}>
+          <View style={styles.container}>
+            <Image
+              source={{
+                uri: img,
+              }}
+              style={styles.profileImage}
+            />
+          </View>
+        </ImageBackground>
+        <Text ellipsizeMode={'tail'} numberOfLines={1} style={styles.text}>
+          {name}
+        </Text>
+      </TouchableOpacity>
+      {/* modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.ModalContainer}>
           <Image
             source={{
               uri: img,
             }}
-            style={styles.profileImage}
+            style={styles.ModalImage}
           />
         </View>
-      </ImageBackground>
-      <Text ellipsizeMode={'tail'} numberOfLines={1} style={styles.text}>
-        {name}
-      </Text>
-    </TouchableOpacity>
+      </Modal>
+      {/* modal */}
+    </>
   );
 }
 
@@ -53,6 +87,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  ModalImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+    // backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   megacontainer: {
     // backgroundColor: 'red',
     width: w('25%'),
@@ -64,5 +106,10 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: h('2%'),
     fontWeight: '300',
+  },
+  ModalContainer: {
+    backgroundColor: 'black',
+    width: '100%',
+    height: h('100%'),
   },
 });
